@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>escola.buss - Rastreamento de Ônibus Escolar</title>
+    <!-- Link para o CSS do Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <!-- FontAwesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Link para o CSS personalizado -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <i class="fas fa-bus"></i>
+        <h1>escola.buss</h1>
+    </header>
+    <main>
+        <div id="map"></div>
+        <button id="centerBus" class="floating-btn"><i class="fas fa-crosshairs"></i></button>
+        <div id="infoPanel" class="info-panel">
+            <div class="panel-header">
+                <h3>Informações do Ônibus</h3>
+                <button id="closePanel"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="panel-content">
+                <p><i class="fas fa-clock"></i> <strong>Horário:</strong> <span id="busTime">08:30</span></p>
+                <p><i class="fas fa-info-circle"></i> <strong>Status:</strong> <span id="busStatus">Em movimento</span></p>
+                <p><i class="fas fa-map-marker-alt"></i> <strong>Próxima Parada:</strong> <span id="nextStop">Escola Central</span></p>
+            </div>
+        </div>
+        <div id="controls">
+            <button id="pauseResume"><i class="fas fa-pause"></i> Pausar</button>
+            <button id="speedUp"><i class="fas fa-plus"></i></button>
+            <button id="slowDown"><i class="fas fa-minus"></i></button>
+            <button id="togglePanel"><i class="fas fa-info"></i></button>
+        </div>
+    </main>
+    <!-- Script do Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <!-- Script personalizado -->
+    <script src="script.js"></script>
+</body>
+</html>
