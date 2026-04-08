@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>escola.buss - Mapa</title>
+    <script>
+        const isLoggedIn = localStorage.getItem('escolaBussLoggedIn') === 'true';
+        if (!isLoggedIn) {
+            window.location.replace('index.html');
+        }
+    </script>
+    <!-- Link para o CSS do Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <!-- Link para o CSS Font Awesome (ícones) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Link para o CSS personalizado -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Barra superior (Header) -->
+    <header class="app-header">
+        <button id="menu-button" class="header-icon menu-icon" title="Menu">
+            <i class="fas fa-bars"></i>
+        </button>
+        <h1 class="app-title">escola.buss</h1>
+        <button id="notification-button" class="header-icon notification-icon" title="Notificações">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge">2</span>
+        </button>
+    </header>
+
+    <!-- Mapa ocupando toda a tela -->
+    <div id="map" class="map-container"></div>
+
+    <!-- Botões flutuantes de controle do mapa -->
+    <div class="floating-buttons">
+        <button id="location-button" class="floating-btn" title="Minha localização">
+            <i class="fas fa-location-dot"></i>
+        </button>
+        <button id="zoom-in-button" class="floating-btn" title="Aumentar zoom">
+            <i class="fas fa-plus"></i>
+        </button>
+        <button id="zoom-out-button" class="floating-btn" title="Diminuir zoom">
+            <i class="fas fa-minus"></i>
+        </button>
+    </div>
+
+    <!-- Barra de pesquisa flutuante -->
+    <div class="search-bar-container">
+        <div class="search-bar">
+            <i class="fas fa-magnifying-glass search-icon"></i>
+            <input type="text" id="search-input" placeholder="Buscar localização...">
+        </div>
+    </div>
+
+    <!-- Painel inferior (bottom sheet) com informações -->
+    <div class="bottom-sheet">
+        <div class="bottom-sheet-drag-handle"></div>
+        <div class="bottom-sheet-header">
+            <h3>Informações do Ônibus</h3>
+            <button id="close-bottom-sheet" class="close-button" title="Fechar">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="bottom-sheet-content">
+            <p>Clique em um ônibus no mapa para ver os detalhes.</p>
+        </div>
+    </div>
+
+    <!-- Barra inferior de navegação -->
+    <nav class="bottom-navbar">
+        <button class="nav-button active" data-tab="rotas" title="Rotas">
+            <i class="fas fa-map"></i>
+            <span>Rotas</span>
+        </button>
+        <button class="nav-button" data-tab="notificacoes" title="Notificações">
+            <i class="fas fa-comments"></i>
+            <span>Notificações</span>
+        </button>
+        <button class="nav-button" data-tab="perfil" title="Perfil">
+            <i class="fas fa-user"></i>
+            <span>Perfil</span>
+        </button>
+    </nav>
+
+    <!-- Script do Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Script personalizado -->
+    <script src="script.js"></script>
+</body>
+</html>
