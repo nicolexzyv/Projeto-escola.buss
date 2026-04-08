@@ -6,14 +6,16 @@ Este é um aplicativo web simples para rastreamento de ônibus escolar, desenvol
 
 - Tela inicial com título "escola.buss"
 - Mapa interativo centralizado em Almirante Tamandaré - PR
-- Marcador e círculo de exemplo para demonstração
+- 5 ônibus escolares em movimento simultâneo, cada um seguindo sua rota específica
+- Movimento suave entre pontos das rotas
+- Marcadores para as escolas com popups informativos
 - Layout responsivo e bonito
 
 ## Estrutura do Projeto
 
 - `index.html`: Estrutura HTML da página
 - `style.css`: Estilos CSS para o layout
-- `script.js`: Lógica JavaScript para inicializar o mapa
+- `script.js`: Lógica JavaScript para inicializar o mapa e controlar os ônibus
 
 ## Como Rodar o Projeto
 
@@ -28,7 +30,7 @@ Este é um aplicativo web simples para rastreamento de ônibus escolar, desenvol
    - Na pasta do projeto, execute: `http-server`
    - Abra o navegador e acesse `http://localhost:8080` (ou a porta indicada).
 
-4. O mapa será carregado automaticamente, centralizado em Almirante Tamandaré - PR, com um marcador e um círculo de exemplo.
+4. O mapa será carregado automaticamente, centralizado em Almirante Tamandaré - PR, com os ônibus em movimento.
 
 ## Dependências
 

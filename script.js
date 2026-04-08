@@ -13,25 +13,190 @@ const escolas = [
     { nome: "Colégio professora adilmar", latitude: -25.342241, longitude: -49.268769 }
 ];
 
-// Cria uma rota variante para cada ônibus
-function createRouteVariant(shift) {
-    const coords = escolas.map(escola => [escola.latitude, escola.longitude]);
-    const n = coords.length;
-    const firstPart = coords.slice(shift % n);
-    const secondPart = coords.slice(0, shift % n);
-    return firstPart.concat(secondPart);
-}
-
-const buses = [
-    { id: 1, nome: 'Ônibus Azul', color: '#007bff', route: createRouteVariant(0), currentIndex: 0, isPaused: false, speed: 100, marker: null },
-    { id: 2, nome: 'Ônibus Verde', color: '#28a745', route: createRouteVariant(2), currentIndex: 0, isPaused: false, speed: 100, marker: null },
-    { id: 3, nome: 'Ônibus Vermelho', color: '#dc3545', route: createRouteVariant(4), currentIndex: 0, isPaused: false, speed: 100, marker: null },
-    { id: 4, nome: 'Ônibus Laranja', color: '#fd7e14', route: createRouteVariant(6), currentIndex: 0, isPaused: false, speed: 100, marker: null },
-    { id: 5, nome: 'Ônibus Roxo', color: '#6f42c1', route: createRouteVariant(8), currentIndex: 0, isPaused: false, speed: 100, marker: null }
+// Definir rotas para os 5 ônibus com coordenadas específicas
+const rota1 = [
+  [-25.311554, -49.295136], // Ambrósio Bini
+  [-25.311800, -49.294900],
+  [-25.312200, -49.294500],
+  [-25.312700, -49.294000],
+  [-25.313100, -49.293500],
+  [-25.313528, -49.289885], // Jaci
+  [-25.314100, -49.288500],
+  [-25.314700, -49.287500],
+  [-25.315100, -49.286800],
+  [-25.315500, -49.287500]
 ];
 
-let isPaused = false;
-let globalSpeed = 100; // Base para controles gerais
+const rota2 = [
+  [-25.307769, -49.294285], // Airton Senna
+  [-25.308100, -49.293800],
+  [-25.308500, -49.293000],
+  [-25.308900, -49.292200],
+  [-25.309300, -49.291400],
+  [-25.309800, -49.290600],
+  [-25.310300, -49.289800],
+  [-25.310800, -49.289000],
+  [-25.311300, -49.288300],
+  [-25.311500, -49.288500],
+  [-25.312000, -49.287900],
+  [-25.312500, -49.287400],
+  [-25.313000, -49.287000]
+];
+
+const rota3 = [
+  [-25.313528, -49.289885], // Jaci
+  [-25.314000, -49.289000],
+  [-25.314800, -49.288000],
+  [-25.315500, -49.287200],
+  [-25.316400, -49.286400],
+  [-25.317500, -49.285600],
+  [-25.318800, -49.284500],
+  [-25.320000, -49.283500],
+  [-25.321500, -49.282500],
+  [-25.323000, -49.281000],
+  [-25.324800, -49.279800],
+  [-25.326800, -49.279000],
+  [-25.329000, -49.278700],
+  [-25.331000, -49.278500],
+  [-25.331555, -49.278424] // Papa João
+];
+
+const rota4 = [
+  [-25.311554, -49.295136], // Ambrósio
+  [-25.311800, -49.295800],
+  [-25.312200, -49.296500],
+  [-25.312700, -49.297400],
+  [-25.313200, -49.298400],
+  [-25.313700, -49.299400],
+  [-25.314200, -49.300800],
+  [-25.314800, -49.301900],
+  [-25.315400, -49.303000],
+  [-25.315900, -49.304000],
+  [-25.316243, -49.308498] // Jardim Paraíso
+];
+
+const rota5 = [
+  [-25.311554, -49.295136], // Ambrósio
+  [-25.312000, -49.294500],
+  [-25.313000, -49.293000],
+  [-25.314000, -49.291200],
+  [-25.315000, -49.289500],
+  [-25.316000, -49.288300],
+  [-25.317000, -49.287000],
+  [-25.318000, -49.285500],
+  [-25.319000, -49.284000],
+  [-25.320000, -49.282500],
+  [-25.320800, -49.281200],
+  [-25.321500, -49.279500],
+  [-25.322000, -49.278500],
+  [-25.322647, -49.277151] // Pedro Piekas
+];
+
+// Configuração dos ônibus com informações do motorista
+const buses = [
+    { 
+        id: 1, 
+        nome: 'Ônibus Azul', 
+        color: '#007bff', 
+        route: [...rota1], 
+        originalRoute: [...rota1], 
+        currentIndex: 0, 
+        marker: null, 
+        direction: 'ida',
+        motorista: {
+            nome: 'João Silva',
+            telefone: '(41) 99999-9999',
+            numero_onibus: '01'
+        }
+    },
+    { 
+        id: 2, 
+        nome: 'Ônibus Verde', 
+        color: '#28a745', 
+        route: [...rota2], 
+        originalRoute: [...rota2], 
+        currentIndex: 0, 
+        marker: null, 
+        direction: 'ida',
+        motorista: {
+            nome: 'Maria Santos',
+            telefone: '(41) 98888-7777',
+            numero_onibus: '02'
+        }
+    },
+    { 
+        id: 3, 
+        nome: 'Ônibus Vermelho', 
+        color: '#dc3545', 
+        route: [...rota3], 
+        originalRoute: [...rota3], 
+        currentIndex: 0, 
+        marker: null, 
+        direction: 'ida',
+        motorista: {
+            nome: 'Carlos Oliveira',
+            telefone: '(41) 97777-6666',
+            numero_onibus: '03'
+        }
+    },
+    { 
+        id: 4, 
+        nome: 'Ônibus Laranja', 
+        color: '#fd7e14', 
+        route: [...rota4], 
+        originalRoute: [...rota4], 
+        currentIndex: 0, 
+        marker: null, 
+        direction: 'ida',
+        motorista: {
+            nome: 'Ana Ferreira',
+            telefone: '(41) 96666-5555',
+            numero_onibus: '04'
+        }
+    },
+    { 
+        id: 5, 
+        nome: 'Ônibus Roxo', 
+        color: '#6f42c1', 
+        route: [...rota5], 
+        originalRoute: [...rota5], 
+        currentIndex: 0, 
+        marker: null, 
+        direction: 'ida',
+        motorista: {
+            nome: 'Pedro Costa',
+            telefone: '(41) 95555-4444',
+            numero_onibus: '05'
+        }
+    }
+];
+
+// Função para gerar pontos intermediários entre dois pontos com curvatura simulada (ruas)
+function generateIntermediatePoints(start, end, numPoints) {
+    const points = [];
+    const deltaLat = end[0] - start[0];
+    const deltaLng = end[1] - start[1];
+    const distance = Math.sqrt(deltaLat * deltaLat + deltaLng * deltaLng);
+    
+    for (let i = 0; i <= numPoints; i++) {
+        const t = i / numPoints;
+        let lat = start[0] + deltaLat * t;
+        let lng = start[1] + deltaLng * t;
+        
+        // Adicionar curvatura sinusoidal para simular ruas (mais pronunciada)
+        const curvatureFactor = 0.002; // Fator de curvatura aumentado
+        const perpendicularLat = -deltaLng / distance;
+        const perpendicularLng = deltaLat / distance;
+        
+        // Curvatura em forma de S para simular ruas realistas
+        const curveOffset = Math.sin(t * Math.PI * 2) * curvatureFactor * distance;
+        lat += curveOffset * perpendicularLat;
+        lng += curveOffset * perpendicularLng;
+        
+        points.push([lat, lng]);
+    }
+    return points;
+}
 
 // Função para atualizar a posição do ônibus
 function updateBusLocation(bus, lat, lng) {
@@ -40,62 +205,121 @@ function updateBusLocation(bus, lat, lng) {
     }
 }
 
-// Função para interpolar entre dois pontos
-function interpolate(start, end, t) {
-    // t é um valor entre 0 e 1
-    const lat = start[0] + (end[0] - start[0]) * t;
-    const lng = start[1] + (end[1] - start[1]) * t;
-    return [lat, lng];
+// Função para calcular distância entre dois pontos (Fórmula de Haversine)
+function calculateDistance(lat1, lng1, lat2, lng2) {
+    const R = 6371; // Raio da Terra em km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLng = (lng2 - lng1) * Math.PI / 180;
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLng/2) * Math.sin(dLng/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c; // Distância em km
 }
 
-// Função para calcular o ângulo de rotação entre dois pontos
-function calculateAngle(start, end) {
-    const deltaLat = end[0] - start[0];
-    const deltaLng = end[1] - start[1];
-    const angleDeg = Math.atan2(deltaLng, deltaLat) * (180 / Math.PI);
-    return angleDeg;
+// Função para encontrar a escola mais próxima
+function findNearestSchool(lat, lng) {
+    let nearest = null;
+    let minDistance = Infinity;
+    
+    escolas.forEach(escola => {
+        const distance = calculateDistance(lat, lng, escola.latitude, escola.longitude);
+        if (distance < minDistance) {
+            minDistance = distance;
+            nearest = { escola: escola, distance: distance };
+        }
+    });
+    
+    return nearest;
 }
 
 // Função para mover um ônibus suavemente na sua rota
 function moveBus(bus) {
     if (!bus || !bus.route || bus.route.length < 2) return;
-
-    if (bus.isPaused) {
-        setTimeout(() => moveBus(bus), 100);
+    if (bus.currentIndex >= bus.route.length - 1) {
+        handleRouteEnd(bus);
         return;
     }
 
     const start = bus.route[bus.currentIndex];
-    const end = bus.route[(bus.currentIndex + 1) % bus.route.length];
+    const end = bus.route[bus.currentIndex + 1];
 
-    let t = 0;
-    const steps = 50;
-    const stepTime = bus.speed / steps;
+    // Gerar pontos intermediários para movimento suave
+    const intermediatePoints = generateIntermediatePoints(start, end, 100);
+    let pointIndex = 0;
 
     const moveStep = () => {
-        if (bus.isPaused) {
-            setTimeout(moveStep, 100);
-            return;
-        }
-
-        if (t <= 1) {
-            const [lat, lng] = interpolate(start, end, t);
+        if (pointIndex < intermediatePoints.length) {
+            const [lat, lng] = intermediatePoints[pointIndex];
             updateBusLocation(bus, lat, lng);
 
-            const angle = calculateAngle(start, end);
-            if (bus.marker && bus.marker._icon) {
-                bus.marker._icon.style.transform = `rotate(${angle}deg)`;
-            }
-
-            t += 1 / steps;
-            setTimeout(moveStep, stepTime);
+            pointIndex++;
+            setTimeout(moveStep, 20);
         } else {
-            bus.currentIndex = (bus.currentIndex + 1) % bus.route.length;
-            moveBus(bus);
+            // Verificar se chegou em uma escola de parada
+            const [lat, lng] = bus.route[bus.currentIndex + 1];
+            const nearest = findNearestSchool(lat, lng);
+
+            bus.currentIndex += 1;
+
+            if (nearest && nearest.distance < 0.0005) {
+                // Parada de 3 segundos em escolas
+                setTimeout(() => {
+                    handleRouteEnd(bus);
+                }, 3000);
+            } else {
+                handleRouteEnd(bus);
+            }
         }
     };
 
     moveStep();
+}
+
+function handleRouteEnd(bus) {
+    if (bus.currentIndex < bus.route.length - 1) {
+        setTimeout(() => moveBus(bus), 500);
+        return;
+    }
+
+    if (bus.direction === 'ida') {
+        setTimeout(() => {
+            bus.route = [...bus.originalRoute].reverse();
+            bus.currentIndex = 0;
+            bus.direction = 'volta';
+            setTimeout(() => moveBus(bus), 500);
+        }, 5000);
+    } else {
+        bus.route = [...bus.originalRoute];
+        bus.currentIndex = 0;
+        bus.direction = 'ida';
+        setTimeout(() => moveBus(bus), 500);
+    }
+}
+
+// Função para gerar o popup com informações do motorista
+function gerarPopupMotorista(bus) {
+    const { nome, telefone, numero_onibus } = bus.motorista;
+    
+    // HTML formatado com estilos básicos
+    const popupContent = `
+        <div style="font-family: Arial, sans-serif; width: 200px;">
+            <h4 style="margin: 0 0 10px 0; color: #333; border-bottom: 2px solid ${bus.color}; padding-bottom: 8px;">
+                ${bus.nome}
+            </h4>
+            <p style="margin: 8px 0; font-size: 13px;">
+                <strong>Motorista:</strong> ${nome}
+            </p>
+            <p style="margin: 8px 0; font-size: 13px;">
+                <strong>Telefone:</strong> ${telefone}
+            </p>
+            <p style="margin: 8px 0; font-size: 13px;">
+                <strong>Ônibus:</strong> ${numero_onibus}
+            </p>
+        </div>
+    `;
+    
+    return popupContent;
 }
 
 // Função principal para inicializar o mapa
@@ -105,8 +329,17 @@ function initMap() {
     const longitude = escolas[0].longitude;
     const zoomLevel = 13;
 
-    // Criar o mapa e definir a visualização inicial
-    const map = L.map('map').setView([latitude, longitude], zoomLevel);
+    // Criar o mapa e definir a visualização inicial, desabilitando controles extras
+    const map = L.map('map', {
+        zoomControl: true,
+        attributionControl: false,
+        scrollWheelZoom: true,
+        doubleClickZoom: true,
+        boxZoom: false,
+        keyboard: false,
+        dragging: true,
+        touchZoom: true
+    }).setView([latitude, longitude], zoomLevel);
 
     // Adicionar camada de tiles do OpenStreetMap
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -122,12 +355,6 @@ function initMap() {
             .openOn(map);
     });
 
-    // Adicionar um marcador na localização central (primeira escola da rota)
-    const marker = L.marker([latitude, longitude]).addTo(map);
-    marker.bindPopup(`<b>${escolas[0].nome}</b><br>Ponto de partida da rota.`).openPopup();
-
-    // Não desenhar linha reta entre os pontos; manter apenas marcadores e movimento do ônibus
-
     // Adicionar marcadores para as escolas fornecidas com coordenadas exatas
     escolas.forEach(escola => {
         L.marker([escola.latitude, escola.longitude], {
@@ -142,39 +369,39 @@ function initMap() {
         );
     });
 
-    // Adicionar marcador no ponto de início (verde)
-    L.marker(escolas[0], {
-        icon: L.icon({
-            iconUrl: 'https://cdn-icons-png.flaticon.com/512/3050/3050159.png',
-            iconSize: [25, 25],
-            popupAnchor: [0, -10]
-        })
-    }).addTo(map).bindPopup(`<b>Início</b><br>${escolas[0].nome}`);
-
-    // Adicionar marcador no ponto final (vermelho)
-    L.marker(escolas[escolas.length - 1], {
-        icon: L.icon({
-            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-            iconSize: [25, 41],
-            popupAnchor: [0, -10]
-        })
-    }).addTo(map).bindPopup(`<b>Destino</b><br>${escolas[escolas.length - 1].nome}`);
-
     // Adicionar marcadores e iniciar movimento para cada ônibus
     buses.forEach(bus => {
-        const busMarker = L.marker(bus.route[0], {
-            icon: L.divIcon({
-                html: `<span style="font-size: 24px; color: ${bus.color}; text-shadow: 0 0 2px #000;">🚌</span>`,
-                className: 'bus-marker',
-                iconSize: [30, 30],
-                iconAnchor: [15, 15]
-            })
-        }).addTo(map);
+        // Ícone personalizado para ônibus
+        const busIcon = L.divIcon({
+            html: `<span style="font-size: 24px; color: ${bus.color};">🚌</span>`,
+            className: 'bus-icon',
+            iconSize: [30, 30],
+            iconAnchor: [15, 15]
+        });
+        
+        const busMarker = L.marker(bus.route[0], { icon: busIcon }).addTo(map);
 
         bus.marker = busMarker;
-        busMarker.bindPopup(`<b>${bus.nome}</b><br>Ponto inicial de rota.`);
+        // Usar a função para gerar popup com informações do motorista
+        busMarker.bindPopup(gerarPopupMotorista(bus));
+        
+        // Adicionar evento de clique para abrir o bottom sheet
+        busMarker.on('click', function() {
+            const bottomSheetContent = `
+                <div style="padding: 8px 0;">
+                    <h3 style="margin: 0 0 16px 0; color: #1f7ed6; font-size: 18px;">${bus.nome}</h3>
+                    <div style="background-color: #f8f9fa; border-radius: 8px; padding: 12px; margin: 12px 0;">
+                        <p style="font-size: 14px; margin: 6px 0;"><strong>Motorista:</strong> ${bus.motorista.nome}</p>
+                        <p style="font-size: 14px; margin: 6px 0;"><strong>Telefone:</strong> ${bus.motorista.telefone}</p>
+                        <p style="font-size: 14px; margin: 6px 0;"><strong>Ônibus:</strong> ${bus.motorista.numero_onibus}</p>
+                    </div>
+                    <p style="font-size: 13px; color: #5f6368; margin: 12px 0;">Clique no ícone de rota para ver mais detalhes.</p>
+                </div>
+            `;
+            updateBottomSheet(bottomSheetContent);
+        });
 
-        // Iniciar movimento suave do ônibus
+        // Iniciar movimento do ônibus
         moveBus(bus);
     });
 
@@ -197,67 +424,163 @@ function getLocationName(lat, lng) {
     }
 }
 
-// Função para atualizar informações do painel
-function updatePanelInfo() {
-    const now = new Date();
-    const mainBus = buses[0];
-    document.getElementById('busTime').textContent = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-    document.getElementById('busStatus').textContent = mainBus && mainBus.isPaused ? 'Pausado' : 'Em movimento';
-    document.getElementById('nextStop').textContent = mainBus ? `Ponto ${mainBus.currentIndex + 1}` : '-';
-}
-
 // Executar a inicialização quando o DOM estiver carregado
 document.addEventListener('DOMContentLoaded', () => {
     const map = initMap();
 
-    // Event listeners para controles
-    const pauseResumeBtn = document.getElementById('pauseResume');
-    const speedUpBtn = document.getElementById('speedUp');
-    const slowDownBtn = document.getElementById('slowDown');
-    const centerBusBtn = document.getElementById('centerBus');
-    const togglePanelBtn = document.getElementById('togglePanel');
-    const closePanelBtn = document.getElementById('closePanel');
-    const infoPanel = document.getElementById('infoPanel');
+    // Funcionalidade da barra de pesquisa
+    const searchInput = document.getElementById('search-input');
 
-    pauseResumeBtn.addEventListener('click', () => {
-        const newPauseState = !buses[0].isPaused;
-        buses.forEach(bus => { bus.isPaused = newPauseState; });
-
-        const icon = pauseResumeBtn.querySelector('i');
-        if (newPauseState) {
-            icon.className = 'fas fa-play';
-            pauseResumeBtn.innerHTML = '<i class="fas fa-play"></i> Continuar';
-        } else {
-            icon.className = 'fas fa-pause';
-            pauseResumeBtn.innerHTML = '<i class="fas fa-pause"></i> Pausar';
+    // Buscar ao pressionar Enter
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            const query = searchInput.value.toLowerCase();
+            const escola = escolas.find(e => e.nome.toLowerCase().includes(query));
+            if (escola) {
+                map.setView([escola.latitude, escola.longitude], 15);
+                // Mostrar no painel
+                updateBottomSheet(`
+                    <div style="padding: 8px 0;">
+                        <h3 style="margin: 0 0 12px 0; color: #1f7ed6; font-size: 18px;">${escola.nome}</h3>
+                        <div style="background-color: #f8f9fa; border-radius: 8px; padding: 12px; margin: 12px 0;">
+                            <p style="font-size: 14px; margin: 6px 0;"><strong>Latitude:</strong> ${escola.latitude.toFixed(6)}</p>
+                            <p style="font-size: 14px; margin: 6px 0;"><strong>Longitude:</strong> ${escola.longitude.toFixed(6)}</p>
+                        </div>
+                    </div>
+                `);
+            } else {
+                alert('Escola não encontrada.');
+            }
         }
-        updatePanelInfo();
     });
 
-    speedUpBtn.addEventListener('click', () => {
-        globalSpeed = Math.max(50, globalSpeed - 20);
-        buses.forEach(bus => { bus.speed = globalSpeed; });
+    // Botões flutuantes
+    const locationButton = document.getElementById('location-button');
+    const zoomInButton = document.getElementById('zoom-in-button');
+    const zoomOutButton = document.getElementById('zoom-out-button');
+
+    locationButton.addEventListener('click', () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                map.setView([lat, lng], 15);
+                L.marker([lat, lng]).addTo(map).bindPopup('Sua localização').openPopup();
+            });
+        } else {
+            alert('Geolocalização não suportada.');
+        }
     });
 
-    slowDownBtn.addEventListener('click', () => {
-        globalSpeed = Math.min(500, globalSpeed + 20);
-        buses.forEach(bus => { bus.speed = globalSpeed; });
+    zoomInButton.addEventListener('click', () => {
+        map.zoomIn();
     });
 
-    centerBusBtn.addEventListener('click', () => {
-        const pos = buses[0] && buses[0].marker ? buses[0].marker.getLatLng() : null;
-        if (pos) map.setView(pos, 15);
+    zoomOutButton.addEventListener('click', () => {
+        map.zoomOut();
     });
 
-    togglePanelBtn.addEventListener('click', () => {
-        infoPanel.classList.toggle('open');
-    });
-
-    closePanelBtn.addEventListener('click', () => {
-        infoPanel.classList.remove('open');
-    });
-
-    // Atualizar painel periodicamente
-    setInterval(updatePanelInfo, 1000);
-    updatePanelInfo(); // Inicial
+    // Integrar com marcadores existentes (opcional, para expandir painel ao clicar)
+    // Como já tem popup, talvez adicionar evento para painel
 });
+
+// ============================================
+// Interatividade da Nova Interface
+// ============================================
+
+// Atualizar a função updateBottomSheet para expandir o painel
+function updateBottomSheet(content) {
+    const bottomSheet = document.querySelector('.bottom-sheet');
+    const contentElement = document.querySelector('.bottom-sheet-content');
+    
+    contentElement.innerHTML = content;
+    bottomSheet.classList.add('expanded');
+}
+
+// Botão de menu
+const menuButton = document.getElementById('menu-button');
+if (menuButton) {
+    menuButton.addEventListener('click', () => {
+        alert('Menu em desenvolvimento');
+    });
+}
+
+// Botão de notificações (header)
+const notificationButton = document.getElementById('notification-button');
+if (notificationButton) {
+    notificationButton.addEventListener('click', () => {
+        alert('Notificações:\n- Ônibus Azul chegando em 5 min\n- Ônibus Verde com atraso de 2 min');
+    });
+}
+
+// Botões de navegação inferior
+const navButtons = document.querySelectorAll('.nav-button');
+navButtons.forEach(button => {
+    button.addEventListener('click', function() {
+        // Remover classe active de todos os botões
+        navButtons.forEach(btn => btn.classList.remove('active'));
+        // Adicionar classe active ao botão clicado
+        this.classList.add('active');
+        
+        const tab = this.getAttribute('data-tab');
+        
+        if (tab === 'rotas') {
+            updateBottomSheet(`
+                <div style="padding: 8px 0;">
+                    <h4 style="margin: 12px 0 8px 0; color: #1f7ed6;">Rotas Disponíveis</h4>
+                    <p style="font-size: 14px; color: #5f6368; margin: 8px 0;">
+                        <strong>Rota 1 (Azul):</strong> Ambrósio → Jaci<br>
+                        <strong>Rota 2 (Verde):</strong> Airton Senna → Centro<br>
+                        <strong>Rota 3 (Vermelho):</strong> Jaci → Papa João<br>
+                        <strong>Rota 4 (Laranja):</strong> Ambrósio → Jardim Paraíso<br>
+                        <strong>Rota 5 (Roxo):</strong> Ambrósio → Pedro Piekas
+                    </p>
+                </div>
+            `);
+        } else if (tab === 'notificacoes') {
+            updateBottomSheet(`
+                <div style="padding: 8px 0;">
+                    <h4 style="margin: 12px 0 8px 0; color: #1f7ed6;">Notificações Recentes</h4>
+                    <div style="border-left: 3px solid #2196F3; padding: 12px; margin: 8px 0; background-color: #f8f9fa; border-radius: 4px;">
+                        <p style="font-size: 14px; margin: 0 0 4px 0;"><strong>Ônibus Azul</strong></p>
+                        <p style="font-size: 13px; color: #5f6368; margin: 0;">Chegando em 5 minutos</p>
+                    </div>
+                    <div style="border-left: 3px solid #FF9800; padding: 12px; margin: 8px 0; background-color: #f8f9fa; border-radius: 4px;">
+                        <p style="font-size: 14px; margin: 0 0 4px 0;"><strong>Ônibus Laranja</strong></p>
+                        <p style="font-size: 13px; color: #5f6368; margin: 0;">Atraso de 3 minutos</p>
+                    </div>
+                </div>
+            `);
+        } else if (tab === 'perfil') {
+            updateBottomSheet(`
+                <div style="padding: 8px 0;">
+                    <h4 style="margin: 12px 0 8px 0; color: #1f7ed6;">Meu Perfil</h4>
+                    <div style="border-radius: 8px; padding: 12px; background-color: #f8f9fa; margin: 8px 0;">
+                        <p style="font-size: 14px; margin: 6px 0;"><strong>Nome:</strong> Usuário</p>
+                        <p style="font-size: 14px; margin: 6px 0;"><strong>Email:</strong> usuario@example.com</p>
+                        <p style="font-size: 14px; margin: 6px 0;"><strong>Telefone:</strong> (41) 9999-9999</p>
+                        <p style="font-size: 14px; margin: 6px 0;"><strong>Ônibus Favorito:</strong> Ônibus Azul</p>
+                    </div>
+                </div>
+            `);
+        }
+    });
+});
+
+// Fechar painel inferior ao clicar na handle de drag
+const dragHandle = document.querySelector('.bottom-sheet-drag-handle');
+if (dragHandle) {
+    dragHandle.addEventListener('click', () => {
+        const bottomSheet = document.querySelector('.bottom-sheet');
+        bottomSheet.classList.toggle('expanded');
+    });
+}
+
+// Botão de fechar do bottom sheet
+const closeButton = document.getElementById('close-bottom-sheet');
+if (closeButton) {
+    closeButton.addEventListener('click', () => {
+        const bottomSheet = document.querySelector('.bottom-sheet');
+        bottomSheet.classList.remove('expanded');
+    });
+}
